@@ -1,4 +1,4 @@
-package com.example.foodhood2
+package com.example.foodhood
 
 import io.flutter.embedding.android.FlutterActivity
 
