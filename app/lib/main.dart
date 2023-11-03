@@ -6,16 +6,17 @@ import 'package:flutter/cupertino.dart';
 
 
 void main() {
-  runApp(const FoodHoodApp());
+  runApp( FoodHoodApp());
 }
 
 class FoodHoodApp extends StatelessWidget {
-  const FoodHoodApp({super.key});
+   FoodHoodApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: WelcomeScreen(),
+      theme: ThemeData(fontFamily: 'Inter'),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (settings) {
         switch (settings.name) {
