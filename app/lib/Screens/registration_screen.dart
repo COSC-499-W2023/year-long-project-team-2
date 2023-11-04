@@ -1,9 +1,20 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
+// registration_screen.dart
+// a screen that allows users to register for an account
 
-class RegistrationScreen extends StatelessWidget {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../components.dart';
+
+class RegistrationScreen extends StatefulWidget {
+  @override
+  _RegistrationScreenState createState() => _RegistrationScreenState();
+}
+
+class _RegistrationScreenState extends State<RegistrationScreen> {
+  final GlobalKey<FormState> _formKey =
+      GlobalKey<FormState>(); // Global key for input validation
+  // Create controllers for each text field
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -11,22 +22,28 @@ class RegistrationScreen extends StatelessWidget {
   final _provinceController = TextEditingController();
   final _cityController = TextEditingController();
 
-  RegistrationScreen({super.key});
+  // Dispose of controllers when the widget is disposed
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CupertinoPageScaffold(
-        backgroundColor: CupertinoColors.systemBackground,
-        navigationBar: _buildNavigationBar(context),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Form(
-                key: _formKey,
-                child: _buildSignupForm(context),
-              ),
+    // main body of the screen
+    return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.systemBackground,
+      navigationBar: buildBackNavigationBar(context), // navigation bar
+      child: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Form(
+              // Form widget for input validation
+              key: _formKey,
+              child: _buildSignupForm(context),
             ),
           ),
         ),
@@ -34,18 +51,7 @@ class RegistrationScreen extends StatelessWidget {
     );
   }
 
-  CupertinoNavigationBar _buildNavigationBar(BuildContext context) {
-    return CupertinoNavigationBar(
-      backgroundColor: CupertinoColors.systemBackground,
-      border: const Border(bottom: BorderSide(color: Colors.transparent)),
-      leading: CupertinoButton(
-        padding: EdgeInsets.zero,
-        child: const Icon(CupertinoIcons.back, color: Color(0xFF337586)),
-        onPressed: () => Navigator.pop(context),
-      ),
-    );
-  }
-
+  // Sign up form
   Column _buildSignupForm(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -54,8 +60,10 @@ class RegistrationScreen extends StatelessWidget {
         _buildText('Create an account', 34, FontWeight.w600, -1.36),
         const SizedBox(height: 50),
         _buildTwoFieldsRow(
-          'First Name', _firstNameController,
-          'Last Name', _lastNameController,
+          'First Name',
+          _firstNameController,
+          'Last Name',
+          _lastNameController,
         ),
         const SizedBox(height: 20),
         _buildCupertinoTextField('Email Address', _emailController, false),
@@ -63,12 +71,16 @@ class RegistrationScreen extends StatelessWidget {
         _buildCupertinoTextField('Password', _passwordController, true),
         const SizedBox(height: 20),
         _buildTwoFieldsRow(
-          'Province', _provinceController,
-          'City', _cityController,
+          'Province',
+          _provinceController,
+          'City',
+          _cityController,
         ),
         const SizedBox(height: 20),
         _buildCupertinoButton(
-            'Create account', const Color(0xFF337586), Colors.white),
+            'Create account', const Color(0xFF337586), CupertinoColors.white),
+        const SizedBox(height: 20),
+        buildCenteredText('or', 14, FontWeight.w600), // Or text
         const SizedBox(height: 20),
         _buildGoogleSignInButton(),
         const SizedBox(height: 20),
@@ -76,6 +88,15 @@ class RegistrationScreen extends StatelessWidget {
       ],
     );
   }
+
+  /* Helper functions 
+   _buildTwoFieldsRow Build a row with two text fields 
+   _buildSignInText Build the sign in text at the bottom of the screen
+   _buildCupertinoTextField Build a Cupertino text field
+   _buildCupertinoButton Build a Cupertino button
+   _buildText Build a text widget
+   _buildGoogleSignInButton Build a Google sign in button
+   */
 
   Row _buildTwoFieldsRow(
     String placeholder1,
@@ -101,8 +122,6 @@ class RegistrationScreen extends StatelessWidget {
     );
   }
 
-  // ...
-
   Widget _buildSignInText(BuildContext context) {
     return Center(
       child: RichText(
@@ -110,7 +129,6 @@ class RegistrationScreen extends StatelessWidget {
           style: const TextStyle(
             fontSize: 12,
             color: Color(0xFF337586),
-            fontFamily: 'Inter',
             fontWeight: FontWeight.w600,
             letterSpacing: -0.20,
           ),
@@ -146,8 +164,7 @@ class RegistrationScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       placeholderStyle: const TextStyle(
         color: Color(0xFFA1A1A1),
-        fontSize: 18,
-        fontFamily: 'Inter',
+        fontSize: 16,
         fontWeight: FontWeight.w500,
       ),
       decoration: BoxDecoration(
@@ -157,11 +174,24 @@ class RegistrationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCupertinoButton(String text, Color backgroundColor, Color textColor) {
+  Widget _buildCupertinoButton(
+      String text, Color backgroundColor, Color textColor) {
     return CupertinoButton(
-      onPressed: () {
+      onPressed: () async {
         if (_formKey.currentState?.validate() ?? false) {
-          // Implement signup functionality
+          try {
+            UserCredential userCredential =
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: _emailController.text,
+              password: _passwordController.text,
+            );
+
+            // User registration successful
+            print('User registered: ${userCredential.user?.uid}');
+          } catch (e) {
+            // Handle registration errors
+            print('Registration failed: $e');
+          }
         }
       },
       color: backgroundColor,
@@ -171,19 +201,18 @@ class RegistrationScreen extends StatelessWidget {
         style: TextStyle(
           color: textColor,
           fontSize: 16,
-          fontFamily: 'Inter',
           fontWeight: FontWeight.w600,
         ),
       ),
     );
   }
 
-  Widget _buildText(String text, double fontSize, FontWeight fontWeight, double letterSpacing) {
+  Widget _buildText(String text, double fontSize, FontWeight fontWeight,
+      double letterSpacing) {
     return Text(
       text,
       style: TextStyle(
         fontSize: fontSize,
-        fontFamily: 'Inter',
         fontWeight: fontWeight,
         letterSpacing: letterSpacing,
       ),
@@ -196,7 +225,7 @@ class RegistrationScreen extends StatelessWidget {
       height: 50,
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.grey, // Color of the border
+          color: CupertinoColors.systemGrey, // Border color
           width: 1, // Thickness of the border
         ),
         borderRadius:
@@ -204,7 +233,7 @@ class RegistrationScreen extends StatelessWidget {
       ),
       child: CupertinoButton(
         onPressed: () {},
-        color: Colors.white,
+        color: CupertinoColors.white,
         borderRadius: BorderRadius.circular(14),
         padding: EdgeInsets.zero,
         child: Row(
@@ -220,7 +249,6 @@ class RegistrationScreen extends StatelessWidget {
                 style: TextStyle(
                     color: Color(0xFF757575),
                     fontSize: 14,
-                    fontFamily: 'Inter',
                     fontWeight: FontWeight.w600)),
           ],
         ),
@@ -228,4 +256,3 @@ class RegistrationScreen extends StatelessWidget {
     );
   }
 }
-

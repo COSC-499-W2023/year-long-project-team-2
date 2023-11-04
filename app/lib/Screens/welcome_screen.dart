@@ -1,8 +1,11 @@
+// welcome_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/cupertino.dart';
-import 'constants.dart';
+import '../components.dart';
 
+// TODO: Implement WelcomeScreen
 class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,6 +21,7 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
+  // welcome screen image 
   Widget _buildImageSection() {
     return AspectRatio(
       aspectRatio: 430 / 359,
@@ -28,6 +32,7 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
+  // Intro texts
   Widget _buildTextSection(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
