@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:FoodHood/Components/colors.dart';
 import 'package:FoodHood/Screens/public_profile_screen.dart';
+import '../auth_service.dart';
+import '../firestore_service.dart';
 
 class MessageScreenPage extends StatefulWidget {
   @override
@@ -20,20 +22,20 @@ class _MessageScreenPageState extends State<MessageScreenPage> {
     "Running late, sorry!",
   ];
 
-  List<Map<String, dynamic>> messages = [
-    {
-      "text": "I will be back home in a few minutes",
-      "received": true,
-      "read": true
-    },
-    {"text": "Is 8:45 okay for you ?", "received": true, "read": true},
-    {"text": "Blah Blah Blah Blah", "received": false, "read": false},
-    {
-      "text": "Are you at the place right now?",
-      "received": false,
-      "read": false
-    },
-  ];
+  final AuthService _authService = AuthService(FirebaseAuth.instance);
+  late String myUid;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Fetch the user ID when the widget initializes
+    _authService.getUserId().then((userId) {
+      setState(() {
+        myUid = userId ?? ''; // Set the user ID to the variable, defaulting to an empty string if null
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
