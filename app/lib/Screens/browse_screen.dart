@@ -87,8 +87,10 @@ class _BrowseScreenState extends State<BrowseScreen>
       return;
     }
 
-    var querySnapshot =
-        await FirebaseFirestore.instance.collection('post_details').get();
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection('post_details')
+        .where('reserved_by', isNull: true) // Exclude posts with 'reserved_by'
+        .get();
     List<Map<String, dynamic>> retrievedPosts = [];
 
     for (var doc in querySnapshot.docs) {
@@ -272,15 +274,13 @@ class _BrowseScreenState extends State<BrowseScreen>
 
   void _filterMarkersByTitle(String searchText) {
     if (searchText.isEmpty) {
-      // If the search text is empty, show all markers
       _fetchAllMarkers();
       return;
     }
     FirebaseFirestore.instance
         .collection('post_details')
-        .where('title',
-            isEqualTo:
-                searchText) // Adjust the field name as per your Firestore collection
+        .where('title', isEqualTo: searchText)
+        .where('reserved_by', isNull: true) // Exclude posts with 'reserved_by'
         .get()
         .then((querySnapshot) {
       Set<Marker> filteredMarkers = {};
@@ -711,6 +711,7 @@ class _BrowseScreenState extends State<BrowseScreen>
   void _fetchAllMarkers() {
     FirebaseFirestore.instance
         .collection('post_details')
+        .where('reserved_by', isNull: true) // Exclude posts with 'reserved_by'
         .get()
         .then((querySnapshot) {
       Set<Marker> allMarkers = {};

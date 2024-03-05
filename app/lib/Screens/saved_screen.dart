@@ -159,6 +159,12 @@ class _SavedScreenState extends State<SavedScreen> {
           return SizedBox.shrink(); // Post data is null, return an empty widget
         }
 
+        // Check if the post is reserved by someone and exclude it from the saved posts list
+        if (postData.containsKey('reserved_by')) {
+          return SizedBox
+              .shrink(); // This post is reserved, so do not display it
+        }
+
         // Extract the first image URL from the imagesWithAltText list
         List<Map<String, String>> imagesWithAltText = [];
         if (postData.containsKey('images') && postData['images'] is List) {
