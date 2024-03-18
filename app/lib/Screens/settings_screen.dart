@@ -106,6 +106,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             );
           }, CupertinoColors.activeOrange),
+          _buildSettingButton('Delete Account', FeatherIcons.logOut, () {
+            _showActionSheet(
+              context,
+              'Delete Account',
+              'Are you sure you want to delete your account permanently?',
+              () async {
+await FirebaseAuth.instance.currentUser?.delete();
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/', (route) => false);
+              },
+            );
+          }, CupertinoColors.activeOrange),
           SizedBox(height: 14),
           _buildSettingButton('Reset Password', FeatherIcons.refreshCw, () {
             _navigateToPage(context, ForgotPasswordScreen());
