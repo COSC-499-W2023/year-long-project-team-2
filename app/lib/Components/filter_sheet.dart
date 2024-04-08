@@ -3,16 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:FoodHood/Components/colors.dart';
 
+// In FilterSheet.dart
 class FilterSheet extends StatefulWidget {
+  final Function(Map<String, dynamic>) onApplyFilters;
+  final Map<String, dynamic> initialCriteria; // New field
+
+  const FilterSheet({
+    Key? key,
+    required this.onApplyFilters,
+    this.initialCriteria = const {}, // Default to empty
+  }) : super(key: key);
   @override
   _FilterSheetState createState() => _FilterSheetState();
 }
 
 class _FilterSheetState extends State<FilterSheet> {
-  String collectionDay = 'Today';
-  List<String> selectedFoodTypes = [];
-  List<String> selectedDietPreferences = [];
-  RangeValues collectionTime = RangeValues(0, 24);
+  late String collectionDay;
+  late List<String> selectedFoodTypes;
+  late List<String> selectedDietPreferences;
+  late RangeValues collectionTime;
+
+  @override
+  void initState() {
+    super.initState();
+    collectionDay = widget.initialCriteria['collectionDay'] ?? 'All';
+    selectedFoodTypes =
+        List<String>.from(widget.initialCriteria['selectedFoodTypes'] ?? []);
+    selectedDietPreferences = List<String>.from(
+        widget.initialCriteria['selectedDietPreferences'] ?? []);
+    collectionTime =
+        widget.initialCriteria['collectionTime'] ?? RangeValues(0, 24);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,6 +127,7 @@ class _FilterSheetState extends State<FilterSheet> {
           const EdgeInsets.symmetric(horizontal: 16.0), // Ensure full width
       child: CupertinoSlidingSegmentedControl<String>(
         children: {
+          'All': Text('All'),
           'Today': Text('Today'),
           'Tomorrow': Text('Tomorrow'),
         },
@@ -209,7 +231,11 @@ class _FilterSheetState extends State<FilterSheet> {
                         CupertinoColors.secondaryLabel.resolveFrom(context))),
             onPressed: () {
               setState(() {
-                // Clear filter logic
+                // Reset all filters to their initial values
+                collectionDay = 'All';
+                selectedFoodTypes = [];
+                selectedDietPreferences = [];
+                collectionTime = RangeValues(0, 24);
               });
             },
           ),
@@ -221,7 +247,16 @@ class _FilterSheetState extends State<FilterSheet> {
                 style: TextStyle(
                     fontWeight: FontWeight.w600, color: CupertinoColors.white)),
             onPressed: () {
-              // Apply filter logic
+              Map<String, dynamic> filterCriteria = {
+                'collectionDay': collectionDay,
+                'selectedFoodTypes': selectedFoodTypes,
+                'selectedDietPreferences': selectedDietPreferences,
+                'collectionTime': collectionTime,
+              };
+
+              widget.onApplyFilters(filterCriteria);
+
+              Navigator.of(context).pop();
             },
           ),
         ],
