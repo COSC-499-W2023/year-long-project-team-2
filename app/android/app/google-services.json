@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "918510273238",
+    "project_id": "cosc499-9a063",
+    "storage_bucket": "cosc499-9a063.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:918510273238:android:f6eac14df961ad48d0bf77",
+        "android_client_info": {
+          "package_name": "com.example.foodhood2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "918510273238-ibhcsrnfas93pk8lrc2k89b5keo0l6hc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.foodhood2",
+            "certificate_hash": "cf5da9827418010119b81280a15d818cca53ad04"
+          }
+        },
+        {
+          "client_id": "918510273238-up0v4ksnqnqnrm67ski3qd4frp7i2f8c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4nmpFKUDgUts536vHEIsh4OXv2nhGtGc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "918510273238-up0v4ksnqnqnrm67ski3qd4frp7i2f8c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "918510273238-55ntgb5us21mr3s953amb8ojt0bcss01.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.foodhood2.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

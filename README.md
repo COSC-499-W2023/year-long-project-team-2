@@ -1,7 +1,42 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=12141429&assignment_repo_type=AssignmentRepo)
-# Project-Starter
+<picture>
+  <img src="https://github.com/COSC-499-W2023/year-long-project-team-2/assets/88886207/d6be51b9-cd11-4dc7-a7a9-e35a95efb27f" alt="FoodHood App Icon" height="80">
+</picture>
 
-Please use the provided folder structure for your docs (project plan, design documentation, communications log, weekly logs, and final documentation), source code, testing, etc.    You are free to organize any additional internal folder structure as required by the project.  Please use a branching workflow and once an item is ready, do remember to issue a PR, code review, and merge it into the develop branch and then the master branch.
+# FoodHood
+FoodHood is a mobile application that allows users to share leftover food with people in need. 
+
+It lets you to create food posts, view nearby food listings available to you, order food, and arrange for pickup at a designated meetup point after placing your order.
+
+> [!WARNING]
+> Project is currently under development, see the list of features completed in the design document.
+
+## Local development
+
+1. Make sure the latest version of [Flutter](https://docs.flutter.dev/get-started/install) was installed. For Mac with Homebrew, in command line, type:
+  ```bash
+  brew install --cask flutter
+  ```
+2. Fetch latest source code from master branch.
+  ```bash
+  git clone https://github.com/COSC-499-W2023/year-long-project-team-2
+  ```
+3. Locate the app folder:
+  ```bash
+  cd year-long-project-team-2
+  cd app
+  ```
+4. Run the app with Android Studio or VS Code. Or the command line:
+  ```bash
+  flutter pub get
+  flutter run
+  ```
+  - Ensure Xcode or Android enviroment was setup correctly on your computer. You may also have to setup appropriate iOS and Android Emulators to run on device.
+5. To test the flutter project:
+  ```bash
+  flutter test
+  ```
+## Project Hierarchy
+
 ```
 .
 ├── docs                    # Documentation files (alternatively `doc`)
@@ -15,4 +50,3 @@ Please use the provided folder structure for your docs (project plan, design doc
 ├── utils                   # Tools and utilities
 └── README.md
 ```
-Also, update your README.md file with the team and client/project information.  You can find details on writing GitHub Markdown [here](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) as well as a [handy cheatsheet](https://enterprise.github.com/downloads/en/markdown-cheatsheet.pdf).   
