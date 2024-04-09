@@ -11,6 +11,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:FoodHood/Screens/profile_edit_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Constants for styling
 const double _defaultPadding = 20.0;
@@ -119,6 +120,63 @@ class _SettingsScreenState extends State<SettingsScreen> {
               () async {
                 try {
                   User user = FirebaseAuth.instance.currentUser!;
+  String uid = user?.uid ?? '';
+
+FirebaseFirestore.instance
+    .collection('user')
+    .doc(uid)
+    .get()
+    .then((docSnapshot) {
+  // Array to hold reserved_posts
+  List<String> reservedPosts = [];
+
+  // Array to hold posts
+  List<String> posts = [];
+
+  // Check if the document exists
+  if (docSnapshot.exists) {
+    // Extract reserved_posts and add to reservedPosts array
+    if (docSnapshot.data() != null && docSnapshot.data()!['reserved_posts'] != null) {
+      reservedPosts.addAll(List<String>.from(docSnapshot.data()!['reserved_posts']));
+    }
+
+    // Extract posts and add to posts array
+    if (docSnapshot.data() != null && docSnapshot.data()!['posts'] != null) {
+      posts.addAll(List<String>.from(docSnapshot.data()!['posts']));
+    }
+
+    // update reserved_posts
+    for (String reservedPost in reservedPosts) {
+      FirebaseFirestore.instance
+          .collection('post_details')
+          .doc(reservedPost)
+          .update({'post_status': 'not reserved'})
+          .then((value) {
+        print('Document successfully updated');
+      }).catchError((error) {
+        print('Error updating document: $error');
+      });
+    }
+
+    // Delete posts
+    for (String post in posts) {
+      FirebaseFirestore.instance
+          .collection('post_details')
+          .doc(post)
+          .delete()
+          .then((value) {
+        print('Document successfully deleted');
+      }).catchError((error) {
+        print('Error deleting document: $error');
+      });
+    }
+  } else {
+    print('Document does not exist');
+  }
+}).catchError((error) {
+  print('Error getting document: $error');
+});
+
                   await user.delete();
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil('/', (route) => false);
